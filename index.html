@@ -37,7 +37,9 @@
 
     <h1>Test des capteurs du téléphone</h1>
 
-    <button onclick="askPermission()">Activer les capteurs</button>
+    <button onclick="askPermission()">Activer les capteurs</button><br>
+    <button onclick="calibration()">calibrer</button><br>
+
 
     <div id="data">
         <h2>Accéléromètre</h2>
@@ -52,6 +54,16 @@
     </div>
 
     <script>
+        var a = parseInt(document.getElementById("accX").textContent)
+        var b = parseInt(document.getElementById("accY").textContent)
+        var c = parseInt(document.getElementById("accZ").textContent)
+        
+        function calibration() {
+            a = 0;
+            b = 0;
+            c = 0;
+        }
+
         function askPermission() {
             // iOS : permission obligatoire
             if (typeof DeviceMotionEvent.requestPermission === "function") {
@@ -69,22 +81,18 @@
 
         function startSensors() {
 
-            // --- Accéléromètre ---
             window.addEventListener("devicemotion", event => {
                 if (event.acceleration) {
-                    document.getElementById("accX").textContent = event.acceleration.x;
-                    document.getElementById("accY").textContent = event.acceleration.y;
-                    document.getElementById("accZ").textContent = event.acceleration.z;
+                    document.getElementById("accX").textContent =  a + event.acceleration.x?.toFixed(2);
+                    document.getElementById("accY").textContent =  b + event.acceleration.y?.toFixed(2);
+                    document.getElementById("accZ").textContent =  c + event.acceleration.z?.toFixed(2);
                 }
             });
-
-            // --- Gyroscope / Orientation ---
             window.addEventListener("deviceorientation", event => {
                 document.getElementById("gA").textContent = event.alpha?.toFixed(2);
                 document.getElementById("gB").textContent = event.beta?.toFixed(2);
                 document.getElementById("gC").textContent = event.gamma?.toFixed(2);
             });
-
             alert("Capteurs activés !");
         }
     </script>
