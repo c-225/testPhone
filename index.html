@@ -83,9 +83,9 @@
 
             window.addEventListener("devicemotion", event => {
                 if (event.acceleration) {
-                    document.getElementById("accX").textContent =  a + event.acceleration.x?.toFixed(2);
-                    document.getElementById("accY").textContent =  b + event.acceleration.y?.toFixed(2);
-                    document.getElementById("accZ").textContent =  c + event.acceleration.z?.toFixed(2);
+                    document.getElementById("accX").textContent =  (a + parseInt(event.acceleration.x?.toFixed(2)))
+                    document.getElementById("accY").textContent =  (b + parseInt(event.acceleration.y?.toFixed(2)))
+                    document.getElementById("accZ").textContent =  (c + parseInt(event.acceleration.z?.toFixed(2)))
                 }
             });
             window.addEventListener("deviceorientation", event => {
