@@ -72,9 +72,9 @@
             // --- Accéléromètre ---
             window.addEventListener("devicemotion", event => {
                 if (event.acceleration) {
-                    document.getElementById("accX").textContent = event.acceleration.x?.toFixed(2);
-                    document.getElementById("accY").textContent = event.acceleration.y?.toFixed(2);
-                    document.getElementById("accZ").textContent = event.acceleration.z?.toFixed(2);
+                    document.getElementById("accX").textContent = event.acceleration.x;
+                    document.getElementById("accY").textContent = event.acceleration.y;
+                    document.getElementById("accZ").textContent = event.acceleration.z;
                 }
             });
 
