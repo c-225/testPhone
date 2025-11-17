@@ -53,52 +53,77 @@
         <p>Gamma (Y) : <span id="gC">0.0</span></p>
     </div>
 
-    <script>
-        var a = parseInt(document.getElementById("accX").textContent)
-        var b = parseInt(document.getElementById("accY").textContent)
-        var c = parseInt(document.getElementById("accZ").textContent)
-        
-        function calibration() {
-            a = 0.0
-            b = 0.0
-            c = 0.0
-        }
+<script>
+    let pos = { x: 0, y: 0, z: 0 };      // Position en m
+    let vel = { x: 0, y: 0, z: 0 };      // Vitesse en m/s
+    let lastTime = null;                 // Timestamp précédent
 
-        function askPermission() {
-            // iOS : permission obligatoire
-            if (typeof DeviceMotionEvent.requestPermission === "function") {
-                DeviceMotionEvent.requestPermission()
-                    .then(state => {
-                        if (state === "granted") startSensors();
-                        else alert("Permission refusée.");
-                    })
-                    .catch(console.error);
-            } else {
-                // Android : démarre direct
-                startSensors();
+    function calibration() {
+        pos = { x: 0, y: 0, z: 0 };
+        vel = { x: 0, y: 0, z: 0 };
+        lastTime = null;
+
+        document.getElementById("accX").textContent = "0.0";
+        document.getElementById("accY").textContent = "0.0";
+        document.getElementById("accZ").textContent = "0.0";
+    }
+
+    function askPermission() {
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+            DeviceMotionEvent.requestPermission()
+                .then(state => {
+                    if (state === "granted") startSensors();
+                    else alert("Permission refusée.");
+                })
+                .catch(console.error);
+        } else {
+            startSensors();
+        }
+    }
+
+    function startSensors() {
+
+        window.addEventListener("devicemotion", event => {
+            if (!event.acceleration) return;
+
+            const ax = event.acceleration.x || 0;
+            const ay = event.acceleration.y || 0;
+            const az = event.acceleration.z || 0;
+
+            const now = Date.now();
+
+            if (lastTime !== null) {
+
+                const dt = (now - lastTime) / 1000; // secondes
+
+                // Intégration vitesse : v = v + a * dt
+                vel.x += ax * dt;
+                vel.y += ay * dt;
+                vel.z += az * dt;
+
+                // Intégration position : p = p + v * dt
+                pos.x += vel.x * dt;
+                pos.y += vel.y * dt;
+                pos.z += vel.z * dt;
             }
-        }
 
-        function startSensors() {
+            lastTime = now;
 
-            window.addEventListener("devicemotion", event => {
-                if (event.acceleration) {
-                    a += parseInt(event.acceleration.x).toFixed(2)
-                    b += parseInt(event.acceleration.y).toFixed(2)
-                    c += parseInt(event.acceleration.z).toFixed(2)
-                    document.getElementById("accX").textContent = a
-                    document.getElementById("accY").textContent = b
-                    document.getElementById("accZ").textContent = c
-                }
-            });
-            window.addEventListener("deviceorientation", event => {
-                document.getElementById("gA").textContent = event.alpha?.toFixed(2);
-                document.getElementById("gB").textContent = event.beta?.toFixed(2);
-                document.getElementById("gC").textContent = event.gamma?.toFixed(2);
-            });
-            alert("Capteurs activés !");
-        }
-    </script>
+            document.getElementById("accX").textContent = pos.x.toFixed(4);
+            document.getElementById("accY").textContent = pos.y.toFixed(4);
+            document.getElementById("accZ").textContent = pos.z.toFixed(4);
+        });
+
+        window.addEventListener("deviceorientation", event => {
+            document.getElementById("gA").textContent = event.alpha?.toFixed(2);
+            document.getElementById("gB").textContent = event.beta?.toFixed(2);
+            document.getElementById("gC").textContent = event.gamma?.toFixed(2);
+        });
+
+        alert("Capteurs activés !");
+    }
+</script>
+
 
 </body>
 </html>
