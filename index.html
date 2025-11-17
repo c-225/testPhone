@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capteurs du téléphone</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h2 { margin-top: 25px; }
+
+        #data {
+            margin-top: 20px;
+            font-size: 18px;
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 10px;
+            display: inline-block;
+            text-align: left;
+        }
+
+        button {
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 8px;
+            border: none;
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Test des capteurs du téléphone</h1>
+
+    <button onclick="askPermission()">Activer les capteurs</button>
+
+    <div id="data">
+        <h2>Accéléromètre</h2>
+        <p>X: <span id="accX">0</span></p>
+        <p>Y: <span id="accY">0</span></p>
+        <p>Z: <span id="accZ">0</span></p>
+
+        <h2>Gyroscope (orientation)</h2>
+        <p>Alpha (Z) : <span id="gA">0</span></p>
+        <p>Beta  (X) : <span id="gB">0</span></p>
+        <p>Gamma (Y) : <span id="gC">0</span></p>
+    </div>
+
+    <script>
+        function askPermission() {
+            // iOS : permission obligatoire
+            if (typeof DeviceMotionEvent.requestPermission === "function") {
+                DeviceMotionEvent.requestPermission()
+                    .then(state => {
+                        if (state === "granted") startSensors();
+                        else alert("Permission refusée.");
+                    })
+                    .catch(console.error);
+            } else {
+                // Android : démarre direct
+                startSensors();
+            }
+        }
+
+        function startSensors() {
+
+            // --- Accéléromètre ---
+            window.addEventListener("devicemotion", event => {
+                if (event.acceleration) {
+                    document.getElementById("accX").textContent = event.acceleration.x?.toFixed(2);
+                    document.getElementById("accY").textContent = event.acceleration.y?.toFixed(2);
+                    document.getElementById("accZ").textContent = event.acceleration.z?.toFixed(2);
+                }
+            });
+
+            // --- Gyroscope / Orientation ---
+            window.addEventListener("deviceorientation", event => {
+                document.getElementById("gA").textContent = event.alpha?.toFixed(2);
+                document.getElementById("gB").textContent = event.beta?.toFixed(2);
+                document.getElementById("gC").textContent = event.gamma?.toFixed(2);
+            });
+
+            alert("Capteurs activés !");
+        }
+    </script>
+
+</body>
+</html>
