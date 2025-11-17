@@ -37,20 +37,20 @@
 
     <h1>Test des capteurs du téléphone</h1>
 
-    <button onclick="askPermission()">Activer les capteurs</button><br>
+    <button onclick="askPermission()">Activer les capteurs</button><br><br>
     <button onclick="calibration()">calibrer</button><br>
 
 
     <div id="data">
         <h2>Accéléromètre</h2>
-        <p>X: <span id="accX">0</span></p>
-        <p>Y: <span id="accY">0</span></p>
-        <p>Z: <span id="accZ">0</span></p>
+        <p>X: <span id="accX">0.0</span></p>
+        <p>Y: <span id="accY">0.0</span></p>
+        <p>Z: <span id="accZ">0.0</span></p>
 
         <h2>Gyroscope (orientation)</h2>
-        <p>Alpha (Z) : <span id="gA">0</span></p>
-        <p>Beta  (X) : <span id="gB">0</span></p>
-        <p>Gamma (Y) : <span id="gC">0</span></p>
+        <p>Alpha (Z) : <span id="gA">0.0</span></p>
+        <p>Beta  (X) : <span id="gB">0.0</span></p>
+        <p>Gamma (Y) : <span id="gC">0.0</span></p>
     </div>
 
     <script>
@@ -59,9 +59,9 @@
         var c = parseInt(document.getElementById("accZ").textContent)
         
         function calibration() {
-            a = 0;
-            b = 0;
-            c = 0;
+            a = 0.0
+            b = 0.0
+            c = 0.0
         }
 
         function askPermission() {
